@@ -63,4 +63,10 @@ app.get("/janken", (req, res) => {
   res.render( 'janken', display );
 });
 
+app.get("/janken2", (req, res) => {
+  let hand = req.query.hand;
+  let win = Number( req.query.win );
+  let total = Number( req.query.total);
+})
+
 app.listen(8080, () => console.log("Example app listening on port 8080!"));
