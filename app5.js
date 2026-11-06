@@ -97,7 +97,7 @@ app.get("/keiyo_result", (req, res) => {
   let name = req.query.name;
   let newdata = { id: id, code: code, name: name };
   station.push( newdata );
-  res.render('db1', {data: station});
+  res.render('db2', {data: station});
 });
 
 app.get("/keiyosyosai", (req, res) => {
