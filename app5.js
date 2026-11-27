@@ -3,6 +3,7 @@ const app = express();
 
 app.set('view engine', 'ejs');
 app.use("/public", express.static(__dirname + "/public"));
+app.use(express.urlencoded({ extended: true }));
 
 let station = [
   { id:1, code:"JE01", name:"東京駅"},
@@ -114,8 +115,60 @@ let station2 = [
   { id:7, code:"JE18", name:"蘇我駅", change:"内房線，外房線", passengers:31328, distance:43.0 },
 ];
 
+//app.get("/keiyo2", (req, res) => {
+//  res.writableNeedDrain('keiyo2', {data: station2} );
+//});
+//一覧
 app.get("/keiyo2", (req, res) => {
-  res.writableNeedDrain('keiyo2', {data: station2} );
+  res.render("keiyo2", {data: station2} );
+});
+
+//create
+app.get("/keiyo2/create", (req, res) =>{
+  res.redirect("/public/keiyo2_new.html");
+});
+
+//read
+app.get("/keiyo2/:number", (req, res) =>{
+  const number = req.params.number;
+  const detail = station2[ number ];
+  res.render("/keiyo2_detail", {id: number, data: detail});
+});
+
+//delete
+app.get("/keiyo2/delete/:number", (req, res) =>{
+  station2.splice( req.params.number, 1 );
+  res.redirect("/keiyo2");
+});
+
+//create
+app.post("/keiyo2", (req, res) =>{
+  const id = station2.length + 1;
+  const code = req.body.code;
+  const name = req.body.change;
+  const passengers = req.body.passengers;
+  const distance = req.body.distance;
+  station2.push( { id:id, code: code, name: name, change: change, passengers: passengers, distance: distance } );
+  console.log( station2 );
+  res.render("keiyo2", {data: station2} );
+});
+
+//edit
+app.get("/keiyo2/edit/:number", (req, res) =>{
+  const number = req.params.number;
+  const detail = station2[ number ];
+  res.render("keiyo2_edit", {id: number, data: detail});
+});
+
+//update
+app.post("/keiyo2/update/:number", (req, res) => {
+  station2[req.params.number].code = req.body.code;
+  station2[req.params.number].name = req.body.name;
+  station2[req.params.number].change = req.body.change;
+  station2[req.params.number].passengers = req.body.passengers;
+  station2[req.params.number].distance = req.body.distance;
+  console.log( station2 );
+  res.redirect("/keiyo2" );
 });
 
 app.get("/keiyo2/:number", (req, res) => {
